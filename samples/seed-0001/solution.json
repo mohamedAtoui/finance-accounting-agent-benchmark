@@ -1,0 +1,273 @@
+{
+  "discrepancies": [
+    {
+      "affected_accounts": [
+        "1000",
+        "5100"
+      ],
+      "detection_hint": "A bank service charge appears on the statement but not in the ledger.",
+      "disc_id": "disc010",
+      "gold_entry": {
+        "date": "2025-01-31",
+        "entry_id": "gold-disc010",
+        "lines": [
+          {
+            "account": "5100",
+            "credit": 0,
+            "debit": 3219
+          },
+          {
+            "account": "1000",
+            "credit": 3219,
+            "debit": 0
+          }
+        ],
+        "memo": "Record bank service charge",
+        "source": "ADJ"
+      },
+      "kind": "unrecorded_bank_fee",
+      "requires_adjustment": true
+    },
+    {
+      "affected_accounts": [
+        "5000",
+        "2200"
+      ],
+      "detection_hint": "An incurred but unbilled expense (see post-close invoice) was not accrued.",
+      "disc_id": "disc012",
+      "gold_entry": {
+        "date": "2025-01-31",
+        "entry_id": "gold-disc012",
+        "lines": [
+          {
+            "account": "5000",
+            "credit": 0,
+            "debit": 52302
+          },
+          {
+            "account": "2200",
+            "credit": 52302,
+            "debit": 0
+          }
+        ],
+        "memo": "Accrue unbilled operating expense",
+        "source": "ADJ"
+      },
+      "kind": "missing_accrual",
+      "requires_adjustment": true
+    },
+    {
+      "affected_accounts": [
+        "5000",
+        "2000"
+      ],
+      "detection_hint": "The same vendor bill appears twice in the ledger; reverse one.",
+      "disc_id": "disc015",
+      "gold_entry": {
+        "date": "2025-01-31",
+        "entry_id": "gold-disc015",
+        "lines": [
+          {
+            "account": "2000",
+            "credit": 0,
+            "debit": 93944
+          },
+          {
+            "account": "5000",
+            "credit": 93944,
+            "debit": 0
+          }
+        ],
+        "memo": "Reverse duplicated vendor bill",
+        "source": "ADJ"
+      },
+      "kind": "duplicate_entry",
+      "requires_adjustment": true
+    },
+    {
+      "affected_accounts": [
+        "5000",
+        "5100"
+      ],
+      "detection_hint": "A charge memo'd 'Bank service charge' was debited to Operating Expenses.",
+      "disc_id": "disc017",
+      "gold_entry": {
+        "date": "2025-01-31",
+        "entry_id": "gold-disc017",
+        "lines": [
+          {
+            "account": "5100",
+            "credit": 0,
+            "debit": 23715
+          },
+          {
+            "account": "5000",
+            "credit": 23715,
+            "debit": 0
+          }
+        ],
+        "memo": "Reclassify bank fee out of operating expenses",
+        "source": "ADJ"
+      },
+      "kind": "misclassification",
+      "requires_adjustment": true
+    },
+    {
+      "affected_accounts": [
+        "1000",
+        "4000"
+      ],
+      "detection_hint": "A payment was booked as 205000 but the bank shows 250000.",
+      "disc_id": "disc019",
+      "gold_entry": {
+        "date": "2025-01-31",
+        "entry_id": "gold-disc019",
+        "lines": [
+          {
+            "account": "1000",
+            "credit": 0,
+            "debit": 45000
+          },
+          {
+            "account": "4000",
+            "credit": 45000,
+            "debit": 0
+          }
+        ],
+        "memo": "Correct transposed customer payment",
+        "source": "ADJ"
+      },
+      "kind": "transposition_error",
+      "requires_adjustment": true
+    },
+    {
+      "affected_accounts": [
+        "1000"
+      ],
+      "detection_hint": "A deposit of 50552 cents is in the ledger but not yet on the bank statement \u2014 a deposit in transit. Do NOT adjust; disclose as reconciling item.",
+      "disc_id": "disc021",
+      "gold_entry": null,
+      "kind": "timing_difference_noadjust",
+      "requires_adjustment": false
+    }
+  ],
+  "gold_adjustments": [
+    {
+      "date": "2025-01-31",
+      "entry_id": "gold-disc010",
+      "lines": [
+        {
+          "account": "5100",
+          "credit": 0,
+          "debit": 3219
+        },
+        {
+          "account": "1000",
+          "credit": 3219,
+          "debit": 0
+        }
+      ],
+      "memo": "Record bank service charge",
+      "source": "ADJ"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gold-disc012",
+      "lines": [
+        {
+          "account": "5000",
+          "credit": 0,
+          "debit": 52302
+        },
+        {
+          "account": "2200",
+          "credit": 52302,
+          "debit": 0
+        }
+      ],
+      "memo": "Accrue unbilled operating expense",
+      "source": "ADJ"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gold-disc015",
+      "lines": [
+        {
+          "account": "2000",
+          "credit": 0,
+          "debit": 93944
+        },
+        {
+          "account": "5000",
+          "credit": 93944,
+          "debit": 0
+        }
+      ],
+      "memo": "Reverse duplicated vendor bill",
+      "source": "ADJ"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gold-disc017",
+      "lines": [
+        {
+          "account": "5100",
+          "credit": 0,
+          "debit": 23715
+        },
+        {
+          "account": "5000",
+          "credit": 23715,
+          "debit": 0
+        }
+      ],
+      "memo": "Reclassify bank fee out of operating expenses",
+      "source": "ADJ"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gold-disc019",
+      "lines": [
+        {
+          "account": "1000",
+          "credit": 0,
+          "debit": 45000
+        },
+        {
+          "account": "4000",
+          "credit": 45000,
+          "debit": 0
+        }
+      ],
+      "memo": "Correct transposed customer payment",
+      "source": "ADJ"
+    }
+  ],
+  "gold_final_balances": {
+    "1000": 1141419,
+    "1100": 360308,
+    "1200": 63432,
+    "1500": 269213,
+    "1510": 13863,
+    "2000": 93944,
+    "2100": 0,
+    "2200": 52302,
+    "2300": 37468,
+    "3000": 435222,
+    "3100": 0,
+    "4000": 1505159,
+    "5000": 276652,
+    "5100": 26934
+  },
+  "protected_accounts": [
+    "3000",
+    "3100"
+  ],
+  "reconcilable_accounts": [
+    "1000",
+    "1100",
+    "2000",
+    "2100"
+  ],
+  "timing_trap_amount": 50552
+}

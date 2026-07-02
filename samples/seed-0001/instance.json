@@ -1,0 +1,501 @@
+{
+  "chart_of_accounts": [
+    {
+      "code": "1000",
+      "name": "Cash - Operating",
+      "normal_side": "debit",
+      "protected": false,
+      "reconcilable": true,
+      "type": "asset"
+    },
+    {
+      "code": "1100",
+      "name": "Accounts Receivable",
+      "normal_side": "debit",
+      "protected": false,
+      "reconcilable": true,
+      "type": "asset"
+    },
+    {
+      "code": "1200",
+      "name": "Prepaid Expenses",
+      "normal_side": "debit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "asset"
+    },
+    {
+      "code": "1500",
+      "name": "Equipment",
+      "normal_side": "debit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "asset"
+    },
+    {
+      "code": "1510",
+      "name": "Accumulated Depreciation",
+      "normal_side": "credit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "asset"
+    },
+    {
+      "code": "2000",
+      "name": "Accounts Payable",
+      "normal_side": "credit",
+      "protected": false,
+      "reconcilable": true,
+      "type": "liability"
+    },
+    {
+      "code": "2100",
+      "name": "Credit Card Payable",
+      "normal_side": "credit",
+      "protected": false,
+      "reconcilable": true,
+      "type": "liability"
+    },
+    {
+      "code": "2200",
+      "name": "Accrued Liabilities",
+      "normal_side": "credit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "liability"
+    },
+    {
+      "code": "2300",
+      "name": "Sales Tax Payable",
+      "normal_side": "credit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "liability"
+    },
+    {
+      "code": "3000",
+      "name": "Common Stock",
+      "normal_side": "credit",
+      "protected": true,
+      "reconcilable": false,
+      "type": "equity"
+    },
+    {
+      "code": "3100",
+      "name": "Retained Earnings",
+      "normal_side": "credit",
+      "protected": true,
+      "reconcilable": false,
+      "type": "equity"
+    },
+    {
+      "code": "4000",
+      "name": "Revenue",
+      "normal_side": "credit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "revenue"
+    },
+    {
+      "code": "5000",
+      "name": "Operating Expenses",
+      "normal_side": "debit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "expense"
+    },
+    {
+      "code": "5100",
+      "name": "Bank Fees",
+      "normal_side": "debit",
+      "protected": false,
+      "reconcilable": false,
+      "type": "expense"
+    }
+  ],
+  "general_ledger": [
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl001",
+      "lines": [
+        {
+          "account": "1000",
+          "credit": 0,
+          "debit": 435222
+        },
+        {
+          "account": "3000",
+          "credit": 435222,
+          "debit": 0
+        }
+      ],
+      "memo": "Owner capital contribution",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl002",
+      "lines": [
+        {
+          "account": "1500",
+          "credit": 0,
+          "debit": 269213
+        },
+        {
+          "account": "1000",
+          "credit": 269213,
+          "debit": 0
+        }
+      ],
+      "memo": "Purchase equipment",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl003",
+      "lines": [
+        {
+          "account": "1000",
+          "credit": 0,
+          "debit": 844299
+        },
+        {
+          "account": "4000",
+          "credit": 844299,
+          "debit": 0
+        }
+      ],
+      "memo": "Cash sales",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl004",
+      "lines": [
+        {
+          "account": "1100",
+          "credit": 0,
+          "debit": 360308
+        },
+        {
+          "account": "4000",
+          "credit": 360308,
+          "debit": 0
+        }
+      ],
+      "memo": "Sales on account",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl005",
+      "lines": [
+        {
+          "account": "5000",
+          "credit": 0,
+          "debit": 116543
+        },
+        {
+          "account": "1000",
+          "credit": 116543,
+          "debit": 0
+        }
+      ],
+      "memo": "Operating expenses paid in cash",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl006",
+      "lines": [
+        {
+          "account": "1200",
+          "credit": 0,
+          "debit": 63432
+        },
+        {
+          "account": "1000",
+          "credit": 63432,
+          "debit": 0
+        }
+      ],
+      "memo": "Prepay insurance",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl007",
+      "lines": [
+        {
+          "account": "5000",
+          "credit": 0,
+          "debit": 13863
+        },
+        {
+          "account": "1510",
+          "credit": 13863,
+          "debit": 0
+        }
+      ],
+      "memo": "Monthly depreciation",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "gl008",
+      "lines": [
+        {
+          "account": "1000",
+          "credit": 0,
+          "debit": 37468
+        },
+        {
+          "account": "2300",
+          "credit": 37468,
+          "debit": 0
+        }
+      ],
+      "memo": "Collect sales tax",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "bill013",
+      "lines": [
+        {
+          "account": "5000",
+          "credit": 0,
+          "debit": 93944
+        },
+        {
+          "account": "2000",
+          "credit": 93944,
+          "debit": 0
+        }
+      ],
+      "memo": "Vendor bill - office supplies",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "bill014",
+      "lines": [
+        {
+          "account": "5000",
+          "credit": 0,
+          "debit": 93944
+        },
+        {
+          "account": "2000",
+          "credit": 93944,
+          "debit": 0
+        }
+      ],
+      "memo": "Vendor bill - office supplies",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "chg016",
+      "lines": [
+        {
+          "account": "5000",
+          "credit": 0,
+          "debit": 23715
+        },
+        {
+          "account": "1000",
+          "credit": 23715,
+          "debit": 0
+        }
+      ],
+      "memo": "Bank service charge",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "rev018",
+      "lines": [
+        {
+          "account": "1000",
+          "credit": 0,
+          "debit": 205000
+        },
+        {
+          "account": "4000",
+          "credit": 205000,
+          "debit": 0
+        }
+      ],
+      "memo": "Customer payment received",
+      "source": "GL"
+    },
+    {
+      "date": "2025-01-31",
+      "entry_id": "dit020",
+      "lines": [
+        {
+          "account": "1000",
+          "credit": 0,
+          "debit": 50552
+        },
+        {
+          "account": "4000",
+          "credit": 50552,
+          "debit": 0
+        }
+      ],
+      "memo": "Late-month customer deposit",
+      "source": "GL"
+    }
+  ],
+  "instance_id": "seed-0001",
+  "opening_trial_balance": {
+    "1000": 1099638,
+    "1100": 360308,
+    "1200": 63432,
+    "1500": 269213,
+    "1510": 13863,
+    "2000": 187888,
+    "2100": 0,
+    "2200": 0,
+    "2300": 37468,
+    "3000": 435222,
+    "3100": 0,
+    "4000": 1460159,
+    "5000": 342009,
+    "5100": 0
+  },
+  "policy": {
+    "accrual_rules": [
+      "Accrue known unbilled operating expenses incurred in the period.",
+      "Record all bank service charges appearing on the bank statement.",
+      "Do not adjust the ledger for timing differences (deposits in transit, outstanding checks); disclose them as reconciling items."
+    ],
+    "materiality_cents": 500,
+    "period_end": "2025-01-31",
+    "protected_accounts": [
+      "3000",
+      "3100"
+    ]
+  },
+  "seed": 1,
+  "statements": [
+    {
+      "account_code": "1000",
+      "closing_balance": 1090867,
+      "kind": "bank",
+      "lines": [
+        {
+          "amount": 435222,
+          "date": "2025-01-31",
+          "description": "Owner capital contribution",
+          "ext_ref": "gl001",
+          "line_id": "bnk-gl001"
+        },
+        {
+          "amount": -269213,
+          "date": "2025-01-31",
+          "description": "Purchase equipment",
+          "ext_ref": "gl002",
+          "line_id": "bnk-gl002"
+        },
+        {
+          "amount": 844299,
+          "date": "2025-01-31",
+          "description": "Cash sales",
+          "ext_ref": "gl003",
+          "line_id": "bnk-gl003"
+        },
+        {
+          "amount": -116543,
+          "date": "2025-01-31",
+          "description": "Operating expenses paid in cash",
+          "ext_ref": "gl005",
+          "line_id": "bnk-gl005"
+        },
+        {
+          "amount": -63432,
+          "date": "2025-01-31",
+          "description": "Prepay insurance",
+          "ext_ref": "gl006",
+          "line_id": "bnk-gl006"
+        },
+        {
+          "amount": 37468,
+          "date": "2025-01-31",
+          "description": "Collect sales tax",
+          "ext_ref": "gl008",
+          "line_id": "bnk-gl008"
+        },
+        {
+          "amount": -3219,
+          "date": "2025-01-31",
+          "description": "Bank service charge",
+          "ext_ref": "fee009",
+          "line_id": "bnk-fee009"
+        },
+        {
+          "amount": -23715,
+          "date": "2025-01-31",
+          "description": "Bank service charge",
+          "ext_ref": "chg016",
+          "line_id": "bnk-chg016"
+        },
+        {
+          "amount": 250000,
+          "date": "2025-01-31",
+          "description": "Customer payment received",
+          "ext_ref": "rev018",
+          "line_id": "bnk-rev018"
+        }
+      ],
+      "opening_balance": 0
+    },
+    {
+      "account_code": "1100",
+      "closing_balance": 360308,
+      "kind": "ar_subledger",
+      "lines": [
+        {
+          "amount": 360308,
+          "date": "2025-01-31",
+          "description": "Open customer invoices",
+          "ext_ref": null,
+          "line_id": "ar-001"
+        }
+      ],
+      "opening_balance": 0
+    },
+    {
+      "account_code": "2000",
+      "closing_balance": 93944,
+      "kind": "ap_subledger",
+      "lines": [
+        {
+          "amount": 93944,
+          "date": "2025-01-31",
+          "description": "Open vendor bills (per vendor statements)",
+          "ext_ref": null,
+          "line_id": "ap-001"
+        }
+      ],
+      "opening_balance": 0
+    },
+    {
+      "account_code": "2200",
+      "closing_balance": 52302,
+      "kind": "post_close_invoice",
+      "lines": [
+        {
+          "amount": 52302,
+          "date": "2025-01-31",
+          "description": "Vendor invoice for January utilities, received after month-end",
+          "ext_ref": "ACCRUAL",
+          "line_id": "inv-disc012"
+        }
+      ],
+      "opening_balance": 0
+    }
+  ]
+}

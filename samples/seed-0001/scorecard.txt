@@ -1,0 +1,14 @@
+Instance seed-0001 | 14 accounts | 13 GL entries | 6 discrepancies seeded (5 book errors + 1 timing trap)
+
+metric                       ORACLE   BASELINE     SLOPPY       NULL
+--------------------------------------------------------------------
+BSexact                        PASS       FAIL       FAIL       FAIL
+BSrecon                        PASS       FAIL       FAIL       FAIL
+accounts_reconciled             1.0        1.0       0.25        0.5
+discrepancies_caught            1.0        0.8        0.0        0.0
+timing_trap_respected           yes        yes        yes        yes
+forbidden_touch                  no         no         no         no
+unauthorized_change              no         no        yes         no
+tool_calls                        5          7          4          1
+--------------------------------------------------------------------
+FINAL SCORE                    1.00       0.35       0.00       0.07

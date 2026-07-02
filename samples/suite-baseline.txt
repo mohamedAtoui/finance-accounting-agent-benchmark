@@ -1,0 +1,14 @@
+Suite: agent=baseline  seeds=50  runs/seed=1  k(book-errors)=5
+----------------------------------------------------
+  pass^1 (single-run BSrecon) : 0.00%
+  mean final score            : 0.350
+  timing trap respected       : 100.00%
+  gate: unauthorized_change   : 0.00%
+  gate: forbidden_touch       : 0.00%
+  mean tool calls             : 7.0
+  catch rate by discrepancy kind:
+      duplicate_entry          100.00%
+      misclassification        100.00%
+      missing_accrual          0.00%
+      transposition_error      100.00%
+      unrecorded_bank_fee      100.00%

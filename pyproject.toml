@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finbalance"
+version = "0.1.0"
+description = "A tool-using, long-horizon LLM-agent benchmark for month-end reconciliation / close, with a deterministic ledger-replay verifier."
+readme = "README.md"
+requires-python = ">=3.10"
+# Deliberately zero runtime dependencies: the reference implementation is
+# pure Python standard library so a reviewer can run it with nothing installed.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+finbalance = "finbalance.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
