@@ -78,18 +78,34 @@ nobody open-sources it. So real data is off the table by construction, and
 synthetic generation is the *only* way to get matched inputs with trustworthy
 labels.
 
-**Ground truth by construction (see `generator.py`).** Each book error is defined
-entirely by its gold adjusting entry; the generator computes that entry's effect
-`E` on balances and sets the public opening trial balance to `clean − E`. Applying
-the gold entry therefore restores the clean balances *by construction*, and the
-generator asserts this at generation time (`replay(opening, gold) == clean` and
-both trial balances net to zero). A broken discrepancy can never ship. This is
-proven across 200 seeds in `tests/test_generator.py`.
+**Ground truth by construction (see `generator.py`).** The generator builds two
+worlds: the entries a perfect accountant *would* have booked (posting them yields
+`gold_final_balances`, the answer key) and the entries the company *actually*
+booked, with errors (posting them yields the public opening trial balance). Each
+error's gold fix is defined as exactly the entry that turns the as-booked world
+into the correct world, and the generator **asserts this at generation time**
+(`replay(opening, gold) == clean` and both trial balances net to zero). A broken
+discrepancy can never ship. Proven across 200 seeds in `tests/test_generator.py`.
 
 **Contamination resistance.** We release the *generator*, not a fixed test file.
 Every instance is a fresh seed, so a model cannot have trained on it — the same
 anti-contamination strategy FinBalance and LOGIGEN adopt. Same seed →
 byte-identical instance (reproducible); new seed → unseen books.
+
+**Track B — a real-data external-validity check (public filings, where they
+genuinely work).** Public filings can't supply reconciliation *inputs* (the
+matched ledger + statement pair is private), but they can supply a narrower,
+fully objective task: **tie-outs**. The agent receives a real 10-K's disclosed
+sub-schedules (e.g. the PP&E rollforward, the debt maturity table) and must
+reproduce the reported XBRL-tagged line item they roll up to; ground truth is the
+**audited, machine-tagged number** the company actually filed. Same verifier
+shape (exact numeric match, partial credit per schedule), real documents, zero
+hand-labeling. Track B is deliberately secondary: it validates that skills
+measured on synthetic books transfer to real filings, while the synthetic core
+keeps the properties an RL reward needs — perfect labels and fresh, uncontaminated
+instances. (Caveat, stated honestly: filings are public training data, so Track B
+scores are upper bounds — another reason it validates rather than replaces the
+core.)
 
 ## 3. Rubric / verifier
 
