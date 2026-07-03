@@ -28,23 +28,23 @@ agents that calibrate the metric — a perfect **Oracle**, a rule-based
 and a do-nothing **Null**:
 
 ```
-Instance seed-0001 | 14 accounts | 13 GL entries | 6 discrepancies seeded (5 book errors + 1 timing trap)
+Instance seed-0001 | 14 accounts | 12 GL entries | 5 discrepancies seeded (4 book errors + 1 timing trap)
 
 metric                       ORACLE   BASELINE     SLOPPY       NULL
 --------------------------------------------------------------------
 BSexact                        PASS       FAIL       FAIL       FAIL
 BSrecon                        PASS       FAIL       FAIL       FAIL
 accounts_reconciled             1.0        1.0       0.25        0.5
-discrepancies_caught            1.0        0.8        0.0        0.0
+discrepancies_caught            1.0       0.75        0.0        0.0
 timing_trap_respected           yes        yes        yes        yes
 forbidden_touch                  no         no         no         no
 unauthorized_change              no         no        yes         no
-tool_calls                        5          7          4          1
+tool_calls                        4          6          4          1
 --------------------------------------------------------------------
-FINAL SCORE                    1.00       0.35       0.00       0.07
+FINAL SCORE                    1.00       0.34       0.00       0.07
 ```
 
-The spread (1.00 / 0.35 / 0.00 / 0.07) shows the metric has real resolution: the
+The spread (1.00 / 0.34 / 0.00 / 0.07) shows the metric has real resolution: the
 Baseline does honest work but is blind to policy-driven accruals; the Sloppy agent
 earns a non-trivial raw score yet is **gated to zero** for moving an account it had
 no business touching.
@@ -61,7 +61,7 @@ carried-forward balances make errors compound:
 
 ```bash
 PYTHONPATH=src python -m finbalance.cli campaign --agent baseline --seed 1 --months 4
-# 1.00 → 1.00 → 0.34 → 0.34 : misses an accrual, drifts, and never recovers
+# 1.00 → 1.00 → 1.00 → 0.34 : misses an accrual, drifts, and cannot recover
 ```
 
 Inspect the generated data (committed under [`samples/`](samples/)):
@@ -86,9 +86,11 @@ python -m venv .venv && ./.venv/bin/pip install pytest
    errors). Because the error lives in the **documents** — a literally duplicated
    ledger entry, a transposed amount the bank contradicts, a fee on the statement
    that never hit the books — a real agent can discover it, not just infer it from
-   balance math. Seeded errors: unrecorded bank fee, transposition, misclassification,
-   duplicate entry, missing accrual, **+ a timing-difference trap that must NOT be
-   adjusted**. Every instance passes a generation-time self-check that replaying the
+   balance math. Seeded errors: unrecorded bank fee, NSF/returned check, transposition,
+   misclassification, duplicate entry, missing accrual, **+ a timing-difference
+   trap that must NOT be adjusted** — each carrying a `provenance` field citing
+   the practitioner source it is abstracted from (AccountingCoach reconciling-items
+   taxonomy, FloQast exception categories, controller checklists). Every instance passes a generation-time self-check that replaying the
    gold fixes reproduces the clean balances — so **ground truth is correct by
    construction** (proven across 100+ seeds in the tests).
 2. **Deterministic ledger-replay verifier** (`ledger.py`, `verifier.py`) — a
@@ -110,7 +112,7 @@ python -m venv .venv && ./.venv/bin/pip install pytest
 This is a **reference implementation** to prove the design is real and runnable,
 not a production benchmark. Deliberate simplifications:
 
-- **One synthetic company**, ~14-account chart of accounts, 6 discrepancy types.
+- **One synthetic company**, ~14-account chart of accounts, 7 discrepancy types.
   A full version scales breadth (more accounts, multi-entity) and error variety.
 - **One gold balance vector per instance.** The chart of accounts is kept
   unambiguous (each error maps to exactly one correct account) so there is a single

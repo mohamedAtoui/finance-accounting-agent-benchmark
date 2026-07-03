@@ -55,10 +55,21 @@ where a missed accrual in month 1 silently corrupts month 2 — the compounding
 degradation observed in AccountingBench).
 
 **The heart of the task is a seeded discrepancy taxonomy** — real close problems
-with known corrections: unrecorded bank fee, **timing difference that must NOT be
-adjusted (a deliberate trap)**, transposition/amount error, misclassification,
-duplicate entry, missing accrual. Reporting *which kinds* an agent catches vs.
-misses is far richer than one aggregate number.
+with known corrections: unrecorded bank fee, NSF/returned customer check, **timing
+difference that must NOT be adjusted (a deliberate trap)**, transposition/amount
+error, misclassification, duplicate entry, missing accrual. Reporting *which
+kinds* an agent catches vs. misses is far richer than one aggregate number.
+
+**Scenario provenance ("real problems, synthetic numbers").** Following the
+provenance model of CFAgentBench — whose tasks derive from real practitioner
+forums and customer artifacts while every amount is synthetically seeded — each
+error type here is abstracted from documented practitioner sources: the standard
+reconciling-items taxonomy (AccountingCoach), close-vendor exception categories
+(FloQast), and controller checklists (Numeric, BookkeepingFlow). Each seeded
+discrepancy carries a machine-readable `provenance` field citing its source. An
+authenticity fingerprint: a genuine digit transposition always differs by a
+multiple of 9 — the same divisible-by-9 rule practitioners use to catch them —
+and the generator's transpositions inherit this property automatically.
 
 ## 2. Ground truth & data
 
@@ -192,10 +203,10 @@ The field splits into three tiers; ours sits in the thin, high-value third.
 |---|---|---|---|---|---|
 | FinanceBench / FinQA / TAT-QA / ConvFinQA / BizBench / DocFinQA | Static financial QA | ❌ | exact-match / judge | filings, hand QA | ✅ |
 | FinToolBench / FAB / FinAgentBench / BigFinanceBench | Finance **research** agents | ✅ | expert answer + judge | expert-written | mixed |
-| **FinBalance** | Multi-doc reconciliation | tool-*light* (one-shot) | **deterministic ledger replay** | synthetic generator | generator claimed, repo unconfirmed |
+| **FinBalance** (Jun 2026) | Multi-doc reconciliation | tool-*light* (one-shot) | **deterministic ledger replay** | synthetic generator | generator claimed, repo unconfirmed |
 | AccountingBench | Real month-end close | ✅ | financial-statement accuracy | **private** real data | ❌ |
 | EnterpriseArena | 132-mo CFO sim | ✅ (tool budget) | programmatic state score | deterministic sim | preprint |
-| CFAgentBench | Construction-finance | ✅ | layered state-diff + gates | seeded env | preprint |
+| CFAgentBench (Jun 2026) | Construction-finance | ✅ | layered state-diff + gates | seeded env | preprint |
 | τ-bench / AppWorld | Tool-agent (retail/apps) | ✅ | final-state vs goal; pass^k | annotated goals | ✅ |
 | Finch / LH-Bench | Spreadsheet / enterprise | ✅ | **LLM judge** *(contrast)* | fixed / rubric | ✅ / preprint |
 

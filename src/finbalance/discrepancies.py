@@ -18,6 +18,16 @@ Entry-id discipline: an entry present in both worlds (possibly with a different
 amount, as in a transposition) keeps the **same** ``entry_id`` in both, so the
 bank statement (rendered from the correct world) can be tied back to the ledger
 line by ``ext_ref``.
+
+Scenario provenance ("real problems, synthetic numbers" — the CFAgentBench
+model): every error type is abstracted from documented practitioner sources —
+the standard reconciling-items taxonomy (AccountingCoach), close-vendor exception
+categories (FloQast), and controller checklists (Numeric, BookkeepingFlow) —
+while all amounts and identifiers are synthetically seeded. Each
+:class:`SeededDiscrepancy` carries its source in ``provenance``. A nice
+authenticity fingerprint: a genuine digit transposition always differs by a
+multiple of 9 — the same divisible-by-9 rule practitioners use to spot them —
+and the generator's transpositions inherit this property automatically.
 """
 
 from __future__ import annotations
@@ -129,6 +139,7 @@ def seed_unrecorded_bank_fee(ctx: GenContext) -> SeedResult:
         disc_id=disc_id, kind=DiscrepancyKind.UNRECORDED_BANK_FEE, requires_adjustment=True,
         affected_accounts=(C.CASH, C.BANK_FEES), gold_entry=gold,
         detection_hint="A bank service charge appears on the statement but not in the ledger.",
+        provenance="Standard reconciling item: unrecorded bank service charges (AccountingCoach reconciling-items taxonomy; FloQast exception categories).",
     )
     # Present on the bank (correct world has the cash entry) but omitted from the
     # public ledger (as-booked contributes nothing).
@@ -153,6 +164,7 @@ def seed_missing_accrual(ctx: GenContext) -> SeedResult:
         disc_id=disc_id, kind=DiscrepancyKind.MISSING_ACCRUAL, requires_adjustment=True,
         affected_accounts=(C.OP_EXPENSE, C.ACCRUED_LIAB), gold_entry=gold,
         detection_hint="An incurred but unbilled expense (see post-close invoice) was not accrued.",
+        provenance="Month-end close checklists: accruals for received-not-invoiced expenses (Numeric/BookkeepingFlow controller checklists).",
     )
     return SeedResult(discrepancy=d, correct_entries=[correct], asbooked_entries=[], docs=[invoice])
 
@@ -171,6 +183,7 @@ def seed_duplicate_entry(ctx: GenContext) -> SeedResult:
         disc_id=disc_id, kind=DiscrepancyKind.DUPLICATE_ENTRY, requires_adjustment=True,
         affected_accounts=(C.OP_EXPENSE, C.AP), gold_entry=gold,
         detection_hint="The same vendor bill appears twice in the ledger; reverse one.",
+        provenance="Duplicate payments/entries: among the most-cited causes of unreconciled balances (practitioner checklists).",
     )
     # Correct world books the bill once; the company booked it twice.
     return SeedResult(discrepancy=d, correct_entries=[bill], asbooked_entries=[bill, dup])
@@ -202,6 +215,7 @@ def seed_transposition_error(ctx: GenContext) -> SeedResult:
         disc_id=disc_id, kind=DiscrepancyKind.TRANSPOSITION_ERROR, requires_adjustment=True,
         affected_accounts=(C.CASH, C.REVENUE), gold_entry=gold,
         detection_hint=f"A payment was booked as {transposed} but the bank shows {correct_amt}.",
+        provenance="Classic transposition; practitioners detect it via the divisible-by-9 rule (AccountingCoach).",
     )
     return SeedResult(discrepancy=d, correct_entries=[correct], asbooked_entries=[asbooked])
 
@@ -220,6 +234,7 @@ def seed_misclassification(ctx: GenContext) -> SeedResult:
         disc_id=disc_id, kind=DiscrepancyKind.MISCLASSIFICATION, requires_adjustment=True,
         affected_accounts=(C.OP_EXPENSE, C.BANK_FEES), gold_entry=gold,
         detection_hint="A charge memo'd 'Bank service charge' was debited to Operating Expenses.",
+        provenance="Misclassification/miscoding: documented close-review exception category (FloQast).",
     )
     return SeedResult(discrepancy=d, correct_entries=[correct], asbooked_entries=[asbooked])
 
@@ -238,9 +253,41 @@ def seed_timing_difference(ctx: GenContext) -> SeedResult:
         affected_accounts=(C.CASH,), gold_entry=None,
         detection_hint=(f"A deposit of {dit} cents is in the ledger but not yet on the bank "
                         "statement — a deposit in transit. Do NOT adjust; disclose as reconciling item."),
+        provenance="Deposits in transit: the canonical no-adjustment reconciling item (AccountingCoach; every bank-rec template).",
     )
     # Correctly booked in BOTH worlds; only the bank statement omits it.
     return SeedResult(discrepancy=d, correct_entries=[deposit], asbooked_entries=[deposit])
+
+
+def seed_nsf_check(ctx: GenContext) -> SeedResult:
+    """A customer's check was deposited and recorded, then bounced (NSF).
+
+    The deposit exists in BOTH worlds (it really happened). The bank returned it,
+    so the correct world also contains the reversal (reinstate the receivable,
+    take the cash back out); the as-booked world is missing that reversal. On the
+    statement the return shows up as a negative "insufficient funds" line with no
+    matching ledger entry — the classic NSF evidence pattern.
+    """
+    pe = ctx.period_end
+    amt = ctx.amount(200_00, 800_00)  # < min AR sales, so AR never goes negative
+    dep_eid = ctx.eid("dep")
+    deposit = _entry(dep_eid, pe, "Customer check deposited",
+                     JournalLine(C.CASH, debit=amt), JournalLine(C.AR, credit=amt))
+    rev_eid = ctx.eid("nsf")
+    reversal = _entry(rev_eid, pe, "Returned check — insufficient funds (NSF)",
+                      JournalLine(C.AR, debit=amt), JournalLine(C.CASH, credit=amt))
+    disc_id = ctx.eid("disc")
+    gold = _adj(f"gold-{disc_id}", pe, "Reverse NSF customer check",
+                JournalLine(C.AR, debit=amt), JournalLine(C.CASH, credit=amt))
+    d = SeededDiscrepancy(
+        disc_id=disc_id, kind=DiscrepancyKind.NSF_CHECK, requires_adjustment=True,
+        affected_accounts=(C.CASH, C.AR), gold_entry=gold,
+        detection_hint="A deposited customer check bounced; the bank shows an NSF return the books never recorded.",
+        provenance="NSF/returned customer checks: standard reconciling item requiring a book adjustment (AccountingCoach reconciling-items taxonomy).",
+    )
+    return SeedResult(discrepancy=d,
+                      correct_entries=[deposit, reversal],
+                      asbooked_entries=[deposit])
 
 
 _SEEDERS = {
@@ -249,6 +296,7 @@ _SEEDERS = {
     DiscrepancyKind.DUPLICATE_ENTRY: seed_duplicate_entry,
     DiscrepancyKind.TRANSPOSITION_ERROR: seed_transposition_error,
     DiscrepancyKind.MISCLASSIFICATION: seed_misclassification,
+    DiscrepancyKind.NSF_CHECK: seed_nsf_check,
 }
 
 

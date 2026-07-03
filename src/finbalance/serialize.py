@@ -91,7 +91,8 @@ def solution_to_dict(gt: GroundTruth) -> dict:
             {"disc_id": d.disc_id, "kind": d.kind.value, "requires_adjustment": d.requires_adjustment,
              "affected_accounts": list(d.affected_accounts),
              "gold_entry": _entry_to_dict(d.gold_entry) if d.gold_entry else None,
-             "detection_hint": d.detection_hint}
+             "detection_hint": d.detection_hint,
+             "provenance": d.provenance}
             for d in gt.discrepancies
         ],
         "protected_accounts": sorted(gt.protected_accounts),
@@ -107,6 +108,7 @@ def solution_from_dict(d: dict) -> GroundTruth:
             tuple(x["affected_accounts"]),
             _entry_from_dict(x["gold_entry"]) if x["gold_entry"] else None,
             x["detection_hint"],
+            x.get("provenance", ""),
         )
         for x in d["discrepancies"]
     )

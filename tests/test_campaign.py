@@ -14,9 +14,9 @@ def test_oracle_holds_across_months():
 
 
 def test_flawed_agent_drifts_and_does_not_recover():
-    # With k=5 every month seeds an accrual, which the baseline never books, so it
-    # must fail from month 1 and the drift must never return to zero.
-    results = run_campaign(BaselineAgent, seed=1, months=4, k=5)
+    # With k=6 every month seeds all book errors incl. the accrual, which the
+    # baseline never books, so it must fail from month 1 and never recover.
+    results = run_campaign(BaselineAgent, seed=1, months=4, k=6)
     assert results[0].scorecard.bs_recon is False
     drifts = [r.drift_accounts for r in results]
     assert drifts[0] > 0

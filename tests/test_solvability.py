@@ -26,7 +26,7 @@ def _cash_amount(entry):
 
 def test_all_kinds_have_evidence_across_seeds():
     for seed in range(100):
-        inst, gt = generate_instance(seed, k=5)  # k=5 → all five book errors present
+        inst, gt = generate_instance(seed, k=6)  # k=6 → all six book errors present
         kinds = {d.kind for d in gt.discrepancies}
         gl = inst.general_ledger
         bank = _bank(inst)
@@ -64,15 +64,24 @@ def test_all_kinds_have_evidence_across_seeds():
             assert any(s.kind == "post_close_invoice" for s in inst.statements), \
                 f"seed {seed}: no post-close invoice evidence"
 
+        # NSF CHECK: a returned-check line on the bank with no matching GL entry.
+        if DiscrepancyKind.NSF_CHECK in kinds:
+            assert any(l.ext_ref not in gl_ids and "NSF" in l.description for l in bank.lines), \
+                f"seed {seed}: no NSF return evidence on statement"
+
         # TIMING TRAP: a ledger cash deposit that is NOT on the bank statement.
         cash_entries = [e for e in gl if any(l.account == C.CASH for l in e.lines)]
         assert any(e.entry_id not in bank_refs for e in cash_entries), \
             f"seed {seed}: deposit-in-transit not distinguishable"
 
+        # PROVENANCE: every discrepancy cites its real-world source.
+        assert all(d.provenance for d in gt.discrepancies), \
+            f"seed {seed}: discrepancy missing provenance"
+
 
 def test_timing_trap_amount_is_unique():
     for seed in range(100):
-        inst, gt = generate_instance(seed, k=5)
+        inst, gt = generate_instance(seed, k=6)
         # No other ledger entry moves cash by exactly the DIT amount, so a trap
         # violation can be detected unambiguously (Phase C).
         dit = gt.timing_trap_amount

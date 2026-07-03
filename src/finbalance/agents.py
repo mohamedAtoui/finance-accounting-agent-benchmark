@@ -71,13 +71,19 @@ class BaselineAgent:
                     return a
             return None
 
-        # (1) Unrecorded bank charges: a bank line with no matching ledger entry.
-        for (_lid, _dt, _desc, amount, ext) in bank["lines"]:
+        # (1) Unmatched negative bank lines: NSF returns reinstate the receivable
+        #     (the practitioner rule); everything else is a bank charge.
+        for (_lid, _dt, desc, amount, ext) in bank["lines"]:
             if ext not in gl_ids and amount < 0:
-                fee = -amount
-                session.post_journal_entry(_je(nid(), "Record bank service charge",
-                                               JournalLine(C.BANK_FEES, debit=fee),
-                                               JournalLine(C.CASH, credit=fee)))
+                amt = -amount
+                if "NSF" in desc or "insufficient" in desc.lower() or "returned" in desc.lower():
+                    session.post_journal_entry(_je(nid(), "Reverse NSF customer check",
+                                                   JournalLine(C.AR, debit=amt),
+                                                   JournalLine(C.CASH, credit=amt)))
+                else:
+                    session.post_journal_entry(_je(nid(), "Record bank service charge",
+                                                   JournalLine(C.BANK_FEES, debit=amt),
+                                                   JournalLine(C.CASH, credit=amt)))
 
         # (2) Transposition: a ledger cash entry whose amount disagrees with the bank.
         for (_lid, _dt, _desc, amount, ext) in bank["lines"]:

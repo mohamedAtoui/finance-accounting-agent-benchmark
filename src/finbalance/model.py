@@ -146,6 +146,7 @@ class DiscrepancyKind(Enum):
     MISCLASSIFICATION = "misclassification"
     DUPLICATE_ENTRY = "duplicate_entry"
     MISSING_ACCRUAL = "missing_accrual"
+    NSF_CHECK = "nsf_check"
 
 
 @dataclass(frozen=True)
@@ -156,6 +157,9 @@ class SeededDiscrepancy:
     affected_accounts: tuple[str, ...]
     gold_entry: "JournalEntry | None"  # canonical fix; None for the timing trap
     detection_hint: str
+    # Real-world source this scenario is abstracted from ("real problems,
+    # synthetic numbers" — the CFAgentBench provenance model).
+    provenance: str = ""
 
 
 @dataclass(frozen=True)
